@@ -37,5 +37,23 @@ jobs:
         choco list
       shell: pwsh
 
+    - name: Install west
+      run: pip3 install west
+
+    - name: Create 'ncs' Folder
+      run: | 
+        mkdir ncs
+        cd ncs
+        ls
+      shell: powershell  # Use PowerShell on Windows
+
+    - name: Get the nRF Connect SDK code
+      run: |
+        west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.4.0
+        west init -m https://github.com/nrfconnect/sdk-nrf --mr main
+        west update
+        west zephyr-export
+        ls
+
 
 
