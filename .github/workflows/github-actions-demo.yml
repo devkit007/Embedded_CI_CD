@@ -27,6 +27,14 @@ jobs:
         ls
       shell: powershell
 
+    - name: Restore nRF Connect SDK Cache
+      uses: actions/cache@v2
+      with:
+        path: ${{ github.workspace }}/ncs
+        key: ncs-${{ runner.os }}-${{ hashFiles('**/west.yml') }}
+        restore-keys: |
+          ncs-windows-
+
     - name: Get the nRF Connect SDK code
       working-directory: ${{ github.workspace }}/ncs
       run: |
