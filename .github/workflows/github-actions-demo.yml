@@ -10,6 +10,9 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+# Installing nRF Connect SDK
+# https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/installing.html
+
     - name: Install the required tools
       run: |
         choco feature enable -n allowGlobalConfirmation
