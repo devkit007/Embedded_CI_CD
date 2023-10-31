@@ -23,10 +23,9 @@ jobs:
 
     - name: Create 'ncs' Folder
       run: | 
-        mkdir C:\a\Embedded_CI_CD\ncs
+        mkdir ${{ github.workspace }}/ncs
         ls
       shell: powershell
-      working-directory: ${{ github.workspace }}/ncs
 
     # - name: Get the nRF Connect SDK code
     #   run: |
