@@ -39,6 +39,7 @@ jobs:
           ncs-windows-
 
     - name: Get the nRF Connect SDK code
+      if: steps.restore-cache.outputs.cache-hit != 'true'
       working-directory: ${{ github.workspace }}/ncs
       run: |
         west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.4.0
