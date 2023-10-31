@@ -43,9 +43,9 @@ jobs:
     - name: Create 'ncs' Folder
       run: | 
         mkdir ncs
-        cd ncs
         ls
-      shell: powershell  # Use PowerShell on Windows
+      shell: powershell
+      working-directory: ${{ github.workspace }}/ncs
 
     - name: Get the nRF Connect SDK code
       run: |
@@ -54,6 +54,11 @@ jobs:
         west update
         west zephyr-export
         ls
+
+    - name: List Folder
+      run: ls
+      shell: powershell
+      working-directory: ${{ github.workspace }}
 
 
 
