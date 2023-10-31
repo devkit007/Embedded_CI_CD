@@ -36,9 +36,8 @@ jobs:
     #     ls
 
     - name: List Folder
+      working-directory: ${{ github.workspace }}/ncs
       run: ls
-      shell: powershell
-      working-directory: ${{ github.workspace }}
 
 
 
