@@ -39,11 +39,8 @@ jobs:
         echo $GITHUB_WORKSPACE/nrf_connect_sdk  # Dies ist der Pfad zum Submodul im Workflow
       shell: bash
 
-    - name: Install Unit Test Dependencies
+    - name: List files in the repository
       run: |
-        choco install ruby
-        choco install qemu
-        echo "Ruby install path: $env:ChocolateyInstall\ruby"
-        echo "QEMU install path: $env:ChocolateyInstall\qemu"
-      shell: bash
+        ls ${{ github.workspace }}
+
 
