@@ -34,6 +34,8 @@ jobs:
         choco feature enable -n allowGlobalConfirmation
         choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
         choco install ninja gperf python git dtc-msys2 wget 7zip
-        choco list -lo
+        choco list
+      shell: pwsh
+
 
 
