@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2020 Nordic Semiconductor ASA
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <nordic/nrf5340_cpuapp_qkaa.dtsi>
+#include "de1353_cpuapp_common.dts"
+#include "de1353_cpuapp-pinctrl.dtsi"
+
+/ {
+	model = "DE1353 Application";
+	compatible = "nordic,de1353-cpuapp";
+
+	chosen {
+		zephyr,sram = &sram0_image;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+		zephyr,sram-secure-partition = &sram0_s;
+		zephyr,sram-non-secure-partition = &sram0_ns;
+		nordic,pm-ext-flash = &mx25r64;
+	};
+};
+
+
+
