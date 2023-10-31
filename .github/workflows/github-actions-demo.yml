@@ -10,31 +10,31 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Install the required tools
-      run: |
-        choco feature enable -n allowGlobalConfirmation
-        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-        choco install ninja gperf python git dtc-msys2 wget 7zip
-        choco list
-      shell: pwsh
+    # - name: Install the required tools
+    #   run: |
+    #     choco feature enable -n allowGlobalConfirmation
+    #     choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+    #     choco install ninja gperf python git dtc-msys2 wget 7zip
+    #     choco list
+    #   shell: pwsh
 
-    - name: Install west
-      run: pip3 install west
+    # - name: Install west
+    #   run: pip3 install west
 
     - name: Create 'ncs' Folder
       run: | 
-        mkdir ${{ github.workspace }}/ncs
+        mkdir C:\a\Embedded_CI_CD\ncs
         ls
       shell: powershell
       working-directory: ${{ github.workspace }}/ncs
 
-    - name: Get the nRF Connect SDK code
-      run: |
-        west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.4.0
-        west init -m https://github.com/nrfconnect/sdk-nrf --mr main
-        west update
-        west zephyr-export
-        ls
+    # - name: Get the nRF Connect SDK code
+    #   run: |
+    #     west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.4.0
+    #     west init -m https://github.com/nrfconnect/sdk-nrf --mr main
+    #     west update
+    #     west zephyr-export
+    #     ls
 
     - name: List Folder
       run: ls
