@@ -28,7 +28,7 @@ jobs:
       with:
         path: |
           C:\ProgramData\chocolatey\lib
-        key: tools-${{ runner.os }}-${{ hashFiles('**/chocolateyinstall.ps1') }}
+        key: cache-tools
 
     - name: Install west
       run: pip3 install west
@@ -54,9 +54,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/ncs
-        key: ncs-${{ runner.os }}-${{ hashFiles('**/west.yml') }}
-        restore-keys: |
-          ncs-windows-
+        key: cache-ncs
 
     - name: List ncs Folder
       working-directory: ${{ github.workspace }}/ncs
@@ -80,6 +78,14 @@ jobs:
         pip install -r zephyr\scripts\requirements.txt
         pip install -r nrf\scripts\requirements.txt
         pip install -r bootloader\mcuboot\scripts\requirements.txt
+
+    - name: Install additional Python dependencies - 2
+      working-directory: ${{ github.workspace }}
+      run: |
+        wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
+        7z x zephyr-sdk-0.16.1_windows-x86_64.7z
+        cd zephyr-sdk-0.16.1
+        setup.cmd
 
 
 
