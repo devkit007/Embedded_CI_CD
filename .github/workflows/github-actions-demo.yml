@@ -28,7 +28,12 @@ jobs:
       with:
         path: |
           C:\ProgramData\chocolatey\lib
-        key: cache-tools
+        key: ${{ runner.os }}-tools
+        
+    - name: Tools Cache Status
+      run: |
+        echo "Cache hit status: ${{ steps.cache-tools.outputs.cache-hit }}"
+        echo "Cache path: ${{ steps.cache-tools.outputs.cache-path }}"
 
     - name: Install west
       run: pip3 install west
@@ -54,7 +59,12 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ${{ github.workspace }}/ncs
-        key: cache-ncs
+        key: ${{ runner.os }}-ncs
+
+    - name: NCS Cache Status
+      run: |
+        echo "Cache hit status: ${{ steps.cache-ncs.outputs.cache-hit }}"
+        echo "Cache path: ${{ steps.cache-ncs.outputs.cache-path }}"
 
     - name: List ncs Folder
       working-directory: ${{ github.workspace }}/ncs
