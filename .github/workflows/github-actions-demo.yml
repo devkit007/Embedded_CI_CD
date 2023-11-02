@@ -79,7 +79,7 @@ jobs:
         pip install -r nrf\scripts\requirements.txt
         pip install -r bootloader\mcuboot\scripts\requirements.txt
 
-    - name: Install additional Python dependencies - 2
+    - name: Install the Zephyr SDK
       working-directory: ${{ github.workspace }}
       run: |
         wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
