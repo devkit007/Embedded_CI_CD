@@ -103,7 +103,7 @@ jobs:
       working-directory: ${{ github.workspace }}/ncs
       run: |
         zephyr\zephyr-env.cmd
-        west build nrf/samples/bluetooth/peripheral_lbs -- -DCONF_FILE='prj_minimal.conf'
+        west build nrf/samples/bluetooth/peripheral_lbs --board qemu_cortex_m3 -t run
 
       
 
