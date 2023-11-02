@@ -64,22 +64,19 @@ jobs:
 
     - name: Install additional Python dependencies - 1
       working-directory: ${{ github.workspace }}
+      shell: powershell
       run: |
         # echo: "Use the following command to install the Python venv package:"
         pip install virtualenv
         # echo: "Create a new virtual environment:"
-        # cd %HOMEPATH%
         python -m venv ncs\.venv
-        # echo: "Activate the virtual environment:"
-        :: cmd.exe
-        ncs\.venv\Scripts\activate.bat
-        :: PowerShell
+        # echo: Activate the virtual environment:
+        ncs\.venv\Scripts\Activate.ps1
 
     - name: Install additional Python dependencies - 2
       working-directory: ${{ github.workspace }}/ncs
       run: |
         # echo: "Enter the following commands in a command-line window in the ncs folder:"
-        ncs\.venv\Scripts\Activate.ps1
         pip install -r zephyr\scripts\requirements.txt
         pip install -r nrf\scripts\requirements.txt
         pip install -r bootloader\mcuboot\scripts\requirements.txt
