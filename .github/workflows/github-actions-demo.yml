@@ -84,8 +84,10 @@ jobs:
       run: |
         wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
         7z x zephyr-sdk-0.16.1_windows-x86_64.7z
-        cd zephyr-sdk-0.16.1
-        setup.cmd
+
+    - name: Run the Zephyr SDK
+      working-directory: ${{ github.workspace }}/zephyr-sdk-0.16.1
+      run: setup.cmd
 
 
 
