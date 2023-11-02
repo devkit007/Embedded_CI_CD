@@ -13,29 +13,15 @@ jobs:
 # Installing nRF Connect SDK
 # https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/installing.html
 
-    - name: Download and Extract Zephyr SDK
-      run: |
-        brew install wget
-        wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
-        7z x zephyr-sdk-0.16.1_windows-x86_64.7z
-      shell: cmd
-
-
-    - name: Run Zephyr SDK Setup
-      run: |
-        ${{ github.workspace }}\zephyr-sdk-0.16.1
-        setup.cmd
-      shell: cmd
-
       
-    # - name: Install the required tools
-    #   if: steps.cache-tools.outputs.cache-hit != 'true'
-    #   run: |
-    #     choco feature enable -n allowGlobalConfirmation
-    #     choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-    #     choco install ninja gperf python git dtc-msys2 wget 7zip
-    #     choco list
-    #   shell: pwsh
+    - name: Install the required tools
+      if: steps.cache-tools.outputs.cache-hit != 'true'
+      run: |
+        choco feature enable -n allowGlobalConfirmation
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+        choco install ninja gperf python git dtc-msys2 wget 7zip
+        choco list
+      shell: pwsh
 
     # - name: Cache the required tools
     #   id: cache-tools
@@ -45,19 +31,19 @@ jobs:
     #       C:\ProgramData\chocolatey\lib
     #     key: ${{ runner.os }}-tools
         
-    # - name: Tools Cache Status
-    #   run: |
-    #     echo "Cache hit status: ${{ steps.cache-tools.outputs.cache-hit }}"
-    #     echo "Cache path: ${{ steps.cache-tools.outputs.cache-path }}"
+    - name: Tools Cache Status
+      run: |
+        echo "Cache hit status: ${{ steps.cache-tools.outputs.cache-hit }}"
+        echo "Cache path: ${{ steps.cache-tools.outputs.cache-path }}"
 
-    # - name: Install west
-    #   run: pip3 install west
+    - name: Install west
+      run: pip3 install west
 
-    # - name: Create 'ncs' Folder
-    #   run: | 
-    #     mkdir ${{ github.workspace }}/ncs
-    #     ls
-    #   shell: powershell
+    - name: Create 'ncs' Folder
+      run: | 
+        mkdir ${{ github.workspace }}/ncs
+        ls
+      shell: powershell
 
     # - name: Get the nRF Connect SDK
     #   if: steps.cache-ncs.outputs.cache-hit != 'true'
@@ -69,53 +55,53 @@ jobs:
     #     west zephyr-export
     #     ls
 
-    # - name: Cache nRF Connect SDK
-    #   id: cache-ncs
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: ${{ github.workspace }}/ncs
-    #     key: ${{ runner.os }}-ncs
+    - name: Cache nRF Connect SDK
+      id: cache-ncs
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/ncs
+        key: ${{ runner.os }}-ncs
 
-    # - name: NCS Cache Status
-    #   run: |
-    #     echo "Cache hit status: ${{ steps.cache-ncs.outputs.cache-hit }}"
-    #     echo "Cache path: ${{ steps.cache-ncs.outputs.cache-path }}"
+    - name: NCS Cache Status
+      run: |
+        echo "Cache hit status: ${{ steps.cache-ncs.outputs.cache-hit }}"
+        echo "Cache path: ${{ steps.cache-ncs.outputs.cache-path }}"
 
-    # - name: List ncs Folder
-    #   working-directory: ${{ github.workspace }}/ncs
-    #   run: ls
+    - name: List ncs Folder
+      working-directory: ${{ github.workspace }}/ncs
+      run: ls
 
-    # - name: Install additional Python dependencies - 1
-    #   working-directory: ${{ github.workspace }}
-    #   shell: powershell
-    #   run: |
-    #     # echo: "Use the following command to install the Python venv package:"
-    #     pip install virtualenv
-    #     # echo: "Create a new virtual environment:"
-    #     python -m venv ncs\.venv
-    #     # echo: Activate the virtual environment:
-    #     ncs\.venv\Scripts\Activate.ps1
+    - name: Install additional Python dependencies - 1
+      working-directory: ${{ github.workspace }}
+      shell: powershell
+      run: |
+        # echo: "Use the following command to install the Python venv package:"
+        pip install virtualenv
+        # echo: "Create a new virtual environment:"
+        python -m venv ncs\.venv
+        # echo: Activate the virtual environment:
+        ncs\.venv\Scripts\Activate.ps1
 
-    # - name: Install additional Python dependencies - 2
-    #   working-directory: ${{ github.workspace }}/ncs
-    #   run: |
-    #     # echo: "Enter the following commands in a command-line window in the ncs folder:"
-    #     pip install -r zephyr\scripts\requirements.txt
-    #     pip install -r nrf\scripts\requirements.txt
-    #     pip install -r bootloader\mcuboot\scripts\requirements.txt
+    - name: Install additional Python dependencies - 2
+      working-directory: ${{ github.workspace }}/ncs
+      run: |
+        # echo: "Enter the following commands in a command-line window in the ncs folder:"
+        pip install -r zephyr\scripts\requirements.txt
+        pip install -r nrf\scripts\requirements.txt
+        pip install -r bootloader\mcuboot\scripts\requirements.txt
 
-    # - name: Install the Zephyr SDK
-    #   working-directory: ${{ github.workspace }}
-    #   run: |
-    #     wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
-    #     7z x zephyr-sdk-0.16.1_windows-x86_64.7z
+    - name: Install the Zephyr SDK
+      working-directory: ${{ github.workspace }}
+      run: |
+        wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
+        7z x zephyr-sdk-0.16.1_windows-x86_64.7z
 
-    # - name: Build
-    #   working-directory: ${{ github.workspace }}
-    #   run: |
-    #     echo "Run the zephyr sdk"
-    #     zephyr-sdk-0.16.1\setup.cmd
-    #     echo "Set up the command-line build environment"
-    #     ncs\zephyr\zephyr-env.cmd
-    #     west build ncs\nrf\samples\bluetooth\peripheral_lbs --board qemu_cortex_m3 -t run
+    - name: Build
+      working-directory: ${{ github.workspace }}
+      run: |
+        echo "Run the zephyr sdk"
+        zephyr-sdk-0.16.1\setup.cmd
+        echo "Set up the command-line build environment"
+        ncs\zephyr\zephyr-env.cmd
+        west build ncs\nrf\samples\bluetooth\peripheral_lbs --board qemu_cortex_m3 -t run
 
