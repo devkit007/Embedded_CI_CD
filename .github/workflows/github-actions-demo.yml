@@ -16,9 +16,10 @@ jobs:
     - name: Download and Extract Zephyr SDK
       run: |
         $HOME\bin\wget.exe https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
-        # wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
-        # 7z x zephyr-sdk-0.16.1_windows-x86_64.7z
       shell: cmd
+
+       # wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zephyr-sdk-0.16.1_windows-x86_64.7z
+      # 7z x zephyr-sdk-0.16.1_windows-x86_64.7z
 
     - name: Run Zephyr SDK Setup
       run: |
