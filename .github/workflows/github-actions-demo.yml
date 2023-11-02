@@ -12,6 +12,15 @@ jobs:
 
 # Installing nRF Connect SDK
 # https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/nrf/installation/installing.html
+      
+    - name: Install the required tools
+      if: steps.cache-tools.outputs.cache-hit != 'true'
+      run: |
+        choco feature enable -n allowGlobalConfirmation
+        choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+        choco install ninja gperf python git dtc-msys2 wget 7zip
+        choco list
+      shell: pwsh
 
     - name: Cache the required tools
       id: cache-tools
@@ -20,61 +29,56 @@ jobs:
         path: |
           C:\ProgramData\chocolatey\lib
         key: tools-${{ runner.os }}-${{ hashFiles('**/chocolateyinstall.ps1') }}
-    
-    - name: Check Cache Status for tools
-      if: steps.cache-tools.outputs.cache-hit != 'true'
-      run: echo "Cache hit:"
 
-      
+    - name: Install west
+      run: pip3 install west
 
-    # - name: Install the required tools
-    #   if: steps.cache-tools.outputs.cache-hit != 'true'
-    #   run: |
-    #     choco feature enable -n allowGlobalConfirmation
-    #     choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System'
-    #     choco install ninja gperf python git dtc-msys2 wget 7zip
-    #     choco list
-    #   shell: pwsh
+    - name: Create 'ncs' Folder
+      run: | 
+        mkdir ${{ github.workspace }}/ncs
+        ls
+      shell: powershell
 
-    # - name: Cache the required tools
-    #   id: cache-tools
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: |
-    #       C:\ProgramData\chocolatey\lib
-    #     key: tools-${{ runner.os }}-${{ hashFiles('**/chocolateyinstall.ps1') }}
+    - name: Get the nRF Connect SDK
+      if: steps.cache-ncs.outputs.cache-hit != 'true'
+      working-directory: ${{ github.workspace }}/ncs
+      run: |
+        west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.4.0
+        west init -m https://github.com/nrfconnect/sdk-nrf --mr main
+        west update
+        west zephyr-export
+        ls
 
-    # - name: Install west
-    #   run: pip3 install west
+    - name: Cache nRF Connect SDK
+      id: cache-ncs
+      uses: actions/cache@v3
+      with:
+        path: ${{ github.workspace }}/ncs
+        key: ncs-${{ runner.os }}-${{ hashFiles('**/west.yml') }}
+        restore-keys: |
+          ncs-windows-
 
-    # - name: Create 'ncs' Folder
-    #   run: | 
-    #     mkdir ${{ github.workspace }}/ncs
-    #     ls
-    #   shell: powershell
+    - name: List ncs Folder
+      working-directory: ${{ github.workspace }}/ncs
+      run: ls
 
-    # - name: Get the nRF Connect SDK
-    #   if: steps.cache-ncs.outputs.cache-hit != 'true'
-    #   working-directory: ${{ github.workspace }}/ncs
-    #   run: |
-    #     west init -m https://github.com/nrfconnect/sdk-nrf --mr v2.4.0
-    #     west init -m https://github.com/nrfconnect/sdk-nrf --mr main
-    #     west update
-    #     west zephyr-export
-    #     ls
-
-    # - name: Cache nRF Connect SDK
-    #   id: cache-ncs
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: ${{ github.workspace }}/ncs
-    #     key: ncs-${{ runner.os }}-${{ hashFiles('**/west.yml') }}
-    #     restore-keys: |
-    #       ncs-windows-
-
-    # - name: List ncs Folder
-    #   working-directory: ${{ github.workspace }}/ncs
-    #   run: ls
+    - name: Install additional Python dependencies
+      working-directory: ${{ github.workspace }}/ncs
+      run: |
+        echo: "Use the following command to install the Python venv package:"
+        pip install virtualenv
+        echo: "Create a new virtual environment:"
+        cd %HOMEPATH%
+        python -m venv ncs\.venv
+        echo: "Activate the virtual environment:"
+        :: cmd.exe
+        ncs\.venv\Scripts\activate.bat
+        :: PowerShell
+        echo: "Enter the following commands in a command-line window in the ncs folder:"
+        ncs\.venv\Scripts\Activate.ps1
+        pip install -r zephyr\scripts\requirements.txt
+        pip install -r nrf\scripts\requirements.txt
+        pip install -r bootloader\mcuboot\scripts\requirements.txt
 
 
 
