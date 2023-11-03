@@ -1,6 +1,6 @@
 name: Build and Test nRF Connect SDK
 
-on: [push]
+# on: [push]
 
 jobs:
   build-firmware:
