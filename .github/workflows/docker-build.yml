@@ -38,17 +38,30 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Get Version
+      - name: Check out the code
+        uses: actions/checkout@v3
+    
+      - name: Get Docker version
         run: docker -v
-
-      - name: Build image
+    
+      - name: Build Docker image
         run: |
           docker build -t nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
             --build-arg sdk_nrf_branch=${{ matrix.sdk_nrf_branch }} \
             --build-arg toolchain_version=${{ matrix.toolchain_version }} \
             .
+      
+      - name: Start Docker container
+        run: |
+          docker run -d --name container_UnitTest nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }}
+        continue-on-error: true
+    
+      - name: Execute CMD script inside Docker container
+        run: |
+          docker exec container_UnitTest ./build.cmd
+        working-directory: ${{ github.workspace }}
+
+
 
       # - name: Build asset_tracker_v2 application
       #   run: |
@@ -57,14 +70,6 @@ jobs:
       #       -w /workdir/nrf/applications/asset_tracker_v2 \
       #       nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
       #         west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
-
-      - name: Build example unit test
-        run: |
-          docker run --rm \
-            -v ${PWD}:/workdir/project \
-            -w /workdir/nrf/tests/unity/example_test \
-            nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
-              west build -b native_posix -t run
 
       # - uses: actions/upload-artifact@v3
       #   with:
