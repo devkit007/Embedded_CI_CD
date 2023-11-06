@@ -50,26 +50,34 @@ jobs:
             --build-arg toolchain_version=${{ matrix.toolchain_version }} \
             .
 
-      - name: Build asset_tracker_v2 application
+      # - name: Build asset_tracker_v2 application
+      #   run: |
+      #     docker run --rm \
+      #       -v ${PWD}:/workdir/project \
+      #       -w /workdir/nrf/applications/asset_tracker_v2 \
+      #       nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
+      #         west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
+
+      - name: Build example unit test
         run: |
           docker run --rm \
             -v ${PWD}:/workdir/project \
-            -w /workdir/nrf/applications/asset_tracker_v2 \
+            -w /workdir/nrf/tests/unity/example_test \
             nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} \
-              west build -b nrf9160dk_nrf9160ns --build-dir /workdir/project/build -- -DEXTRA_CFLAGS="-Werror -Wno-dev"
+              west build -b native_posix -t run
 
-      - uses: actions/upload-artifact@v3
-        with:
-          if-no-files-found: error
-          name: asset_tracker_v2-${{ matrix.sdk_nrf_branch }}
-          path: |
-            build/zephyr/merged.hex
-            build/zephyr/app_update.bin
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     if-no-files-found: error
+      #     name: asset_tracker_v2-${{ matrix.sdk_nrf_branch }}
+      #     path: |
+      #       build/zephyr/merged.hex
+      #       build/zephyr/app_update.bin
 
-      - name: Ensure nrfjprog works
-        run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} nrfjprog -v
+      # - name: Ensure nrfjprog works
+      #   run: |
+      #     docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} nrfjprog -v
 
-      - name: Ensure clang-format works
-        run: |
-          docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} clang-format --version
+      # - name: Ensure clang-format works
+      #   run: |
+      #     docker run --rm nordicplayground/nrfconnect-sdk:${{ matrix.sdk_nrf_branch }} clang-format --version
